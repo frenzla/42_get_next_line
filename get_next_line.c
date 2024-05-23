@@ -6,14 +6,33 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/18 13:25:39 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:09:21 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+//#include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+#endif
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# include <stdlib.h>
+# include <unistd.h>
+# include <stddef.h>
+
+typedef struct s_list
+{
+	char			c;
+	struct s_list	*next;
+} t_list;
+
+#endif
 
 //******************TEST FUNCTION******************
 void	print_lst(t_list **stock)
@@ -25,13 +44,13 @@ void	print_lst(t_list **stock)
 		printf("STOCK IS EMPTY\n");
 	else
 	{
-		printf("IN STOCK: ");
+		//printf("IN STOCK: ");
 		while (tmp)
 		{
-			printf("%c|", tmp->c);
+			//printf("%c|", tmp->c);
 			tmp = tmp->next;
 		}
-		printf("\n");
+		//printf("\n");
 	}
 }
 //******************TEST FUNCTION******************
@@ -74,7 +93,7 @@ size_t	read_n_stock(int fd, char *buff, t_list **stock)
 		add_to_stock(buff[i], stock);
 		i++;
 	}
-	/*WORKING:*/ print_lst(stock);
+	/*WORKING: */print_lst(stock);
 	return(ret_read);
 }
 
@@ -101,13 +120,16 @@ size_t	get_len(t_list **stock)
 
 	tmp = *stock;
 	nb_chars = 0;
-	while (tmp->c != '\n' && tmp)
+	//printf("Counting: ");
+	while (tmp && tmp->c != '\n')
 	{
 		nb_chars++;
+		//printf("%c|", tmp->c);
 		tmp = tmp->next;
 	}
-	if (tmp->c == '\n')
+	if (tmp && tmp->c == '\n')
 		nb_chars++;
+	printf("\nnb_chars (with NL): %zu\n", nb_chars);
 	return (nb_chars);
 }
 
@@ -121,17 +143,19 @@ char	*cpy_n_free(t_list **stock, size_t nb_chars)
 	if (!line)
 		return (NULL);
 	i = 0;
-	printf("Copied: ");
-	while (i < nb_chars && *stock) // && *stock ?
+	//printf("Copied: ");
+	while (i < nb_chars) // && *stock ?
 	{
 		line[i] = (*stock)->c;
-		printf("%c|", line[i]);
+		//printf("%c|", line[i]);
 		tmp = *stock;
 		*stock = (*stock)->next;
 		free(tmp);
 		i++;
 	}
 	line[i]= '\0';
+	//printf("\nAfter deletion - ");
+	//print_lst(stock);
 	return (line);
 }
 
@@ -141,13 +165,22 @@ char	*get_next_line(int fd)
 	char 			buff[BUFFER_SIZE + 1];
 	size_t			ret_read;
 	size_t			nb_chars;
-	static t_list	*stock;
+	static t_list	*stock = NULL;
+	char			*line;
 
+	line = NULL;
 	ret_read = -1;
-	stock = NULL;
-	printf("CURRENT STOCK: ");
+	//printf("CURRENT STOCK: ");
 	print_lst(&stock);
 	//read & stock
+	if (find_NL_or_EOF(&stock, ret_read))
+	{
+		nb_chars = get_len(&stock);
+		//printf("Chars to copy: %zu\n", nb_chars);
+		//copy in line and free stock
+		line = cpy_n_free(&stock, nb_chars);
+		return (line);
+	}
 	while(ret_read != 0)
 	{
 		ret_read = read_n_stock(fd, buff, &stock);
@@ -160,9 +193,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	//count nb_chars to write in line
 	nb_chars = get_len(&stock);
-	printf("Chars to copy: %zu\n", nb_chars);
+	//printf("Chars to copy: %zu\n", nb_chars);
 	//copy in line and free stock
-	return(cpy_n_free(&stock, nb_chars));
+	line = cpy_n_free(&stock, nb_chars);
+	return(line);
 }
 
 int	main(void)
@@ -177,7 +211,7 @@ int	main(void)
 		return (-1);
 	}
 	else
-		printf("File open\n" );
+		printf("File open\n\n" );
 
 	//call get_next_line in a loop
 	line = get_next_line(fd);
@@ -185,9 +219,14 @@ int	main(void)
 	printf("********************************\n");
 	while (line)
 	{
-		printf("LINE: %s\n", get_next_line(fd));
-		printf("********************************\n");
+		line = get_next_line(fd);
+		if (line)
+		{
+			printf("LINE: %s\n", line);
+			printf("********************************\n");
+		}
 	}
+
 	//free and close file
 	close (fd);
 
