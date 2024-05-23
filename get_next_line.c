@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 14:49:38 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 14:59:11 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*get_next_line(int fd)
 	static t_list	*stock = NULL;
 
 	ret_read = BUFFER_SIZE;
-	print_lst(&stock);
 	if (find_nl_or_eof(&stock, ret_read))
 	{
 		nb_chars = get_len(&stock);
