@@ -5,6 +5,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+typedef struct s_list
+{
+	char			c;
+	struct s_list	*next;
+} t_list;
+
 void	print_error()
 {
 	if (errno != 0 )
@@ -47,7 +53,7 @@ int	ft_lstsize(t_list *lst)
 	return (count);
 }
 
-char *	cpy_n_free(t_list **lst, char *line, int nb_chars)
+char *cpy_n_free(t_list **lst, char *line, int nb_chars)
 {
 	int	i;
 	t_list	*tmp;
@@ -76,6 +82,27 @@ char *	cpy_n_free(t_list **lst, char *line, int nb_chars)
 	}
 	return (line);
 }
+char *check_stock(t_list *stock, int ret_read)
+{
+	t_list	*current;
+	int		nb_chars;
+	char	*line;
+
+	current = stock;
+	nb_chars = 0;
+	while (current != NULL)
+	{
+		nb_chars++;
+		if (current->c == '\n' || ret_read < BUFFER_SIZE)
+		{
+			if (ret_read < BUFFER_SIZE)
+				nb_chars = ft_lstsize(stock);
+			return(cpy_n_free(&stock, line, nb_chars));
+		}
+		current = current->next;
+	}
+	return (NULL);
+}
 
 char *get_next_line(int fd)
 {
@@ -85,7 +112,7 @@ char *get_next_line(int fd)
 		int				i;
 		int				k;
 		static t_list	*stock;
-		int				nb_chars = 0;
+		int				nb_chars;
 		t_list			*current;
 
 	if (BUFFER_SIZE < 1)
@@ -100,19 +127,9 @@ char *get_next_line(int fd)
 	ret_read = BUFFER_SIZE;
 		while(ret_read != 0)
 		{
-			current = stock;
-			while (current != NULL)
-			{
-				nb_chars++;
-				if (current->c == '\n' || ret_read < BUFFER_SIZE)
-				{
-					if (ret_read < BUFFER_SIZE)
-						nb_chars = ft_lstsize(stock);
-					return(cpy_n_free(&stock, line, nb_chars));
-				}
-				current = current->next;
-			}
-			nb_chars= 0;
+			line = check_stock(stock, ret_read);
+			if (line)
+				return (line);
 			ret_read = read(fd, buff, BUFFER_SIZE);
 			if (ret_read == -1)
 			{
