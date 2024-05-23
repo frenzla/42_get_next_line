@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 16:34:58 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:47:20 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_next_line(int fd)
 {
-	char			buff[BUFFER_SIZE + 1];
+	char			buff[BUFFER_SIZE];
 	size_t			ret_read;
 	size_t			nb_chars;
 	static t_list	*stock = NULL;

@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:53 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 16:37:33 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:46:31 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ size_t	read_n_stock(int fd, char *buff, t_list **stock)
 	ret_read = read(fd, buff, BUFFER_SIZE);
 	if (ret_read < 1)
 		return (ret_read);
-	buff[ret_read] = '\0';
 	i = 0;
 	while (i < ret_read)
 	{
