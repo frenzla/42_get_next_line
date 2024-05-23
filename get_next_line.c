@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 16:47:20 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 17:03:45 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 char	*get_next_line(int fd)
 {
-	char			buff[BUFFER_SIZE];
+	char			*buff;
 	size_t			ret_read;
 	size_t			nb_chars;
 	static t_list	*stock = NULL;
 
 	ret_read = BUFFER_SIZE;
+	buff = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buff)
+		return (NULL);
 	if (find_nl_or_eof(&stock, ret_read) && ret_read != 0)
 	{
 		nb_chars = get_len(&stock);
@@ -34,6 +37,7 @@ char	*get_next_line(int fd)
 	if (!stock)
 		return (NULL);
 	nb_chars = get_len(&stock);
+	free(buff);
 	return (cpy_n_free(&stock, nb_chars));
 }
 
