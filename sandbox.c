@@ -116,7 +116,11 @@ int	get_next_line(int fd, char **line)
 		}
 	//4. check buff for \n
 		i = ft_strchr(buff, '\n');
-		nb_chars += i;
+		printf("i = %d (chars before NL in buffer)\n", i);
+		if (ret_read < BUFFER_SIZE)
+			nb_chars += ret_read;
+		else
+			nb_chars += i;
 /*		printf("**********************\n");
 		printf("buff size : %d\nchars to newline (10 = no NL): %d\ntotal nb_chars: %d\n", BUFFER_SIZE, i, nb_chars);
 		printf("**********************\n");*/
@@ -130,7 +134,7 @@ int	get_next_line(int fd, char **line)
 		// ****************CHECK****************
 		current = stock;
 		if (current == NULL)
-			printf("STOCK F****G EMPTY");
+			printf("STOCK F****G EMPTY\n");
 		printf("IN STOCK: ");
 		while (current != NULL)
 		{
@@ -140,16 +144,12 @@ int	get_next_line(int fd, char **line)
 		printf("\n");
 		// ****************CHECK****************
 	//	- IF \n => write stock in line + del what has been written from stock + return
-		if (i < BUFFER_SIZE)
+		if (i < BUFFER_SIZE || ret_read < BUFFER_SIZE)
 		{
 			printf("I got a newline\n");
 			//	write stock in line until /n
 			*line = malloc(sizeof(char) * (nb_chars + 1));
 			k = 0;
-/*			**line = 'A';
-			(*line)++;
-			**line = 'B';
-			(*line)--;*/
 			current = stock;
 			while (k < nb_chars)
 			{
@@ -164,7 +164,7 @@ int	get_next_line(int fd, char **line)
 			// ****************CHECK****************
 			current = stock;
 			if (current == NULL)
-				printf("STOCK F****G EMPTY");
+				printf("STOCK F****G EMPTY\n");
 			printf("IN STOCK: ");
 			while (current != NULL)
 			{
@@ -177,7 +177,7 @@ int	get_next_line(int fd, char **line)
 			// ****************CHECK****************
 			current = stock;
 			if (current == NULL)
-				printf("STOCK F****G EMPTY");
+				printf("STOCK F****G EMPTY\n");
 			printf("Still remaining: ");
 			while (current != NULL)
 			{
@@ -189,7 +189,7 @@ int	get_next_line(int fd, char **line)
 		// free buff malloc
 			free(buff);
 		//	return
-			if (i == 0)
+			if (ret_read < BUFFER_SIZE)
 				return (0);
 			else
 				return (1);
@@ -204,7 +204,7 @@ int	main(void)
 	char	**line;
 
 
-	ret = 0;
+	ret = 1;
 	errno = 0;
 	line = malloc(sizeof(char *));
 //Open file
@@ -215,16 +215,19 @@ int	main(void)
 		print_error();
 		return (1);
 	}
-	ret = get_next_line(fd, line);
-	printf("\nRet de get_next_line: %d\n", ret);
-	printf("\n**********************************************\n\n");
-	ret = get_next_line(fd, line);
-	printf("\nRet de get_next_line: %d\n", ret);
-	printf("\n**********************************************\n\n");
-	ret = get_next_line(fd, line);
-	printf("\nRet de get_next_line: %d\n", ret);
+
+	while(ret != 0)
+	{
+		ret = get_next_line(fd, line);
+		printf("\nRet de get_next_line: %d\n", ret);
+		printf("\n**********************************************\n\n");
+		printf("LINE: %s\n", *line);
+		printf("\n**********************************************\n\n");
+
+	}
 
 	close(fd);
-
+	// TO DO: FREE ALL LINES BEFORE FREEING LINE
+	free(line);
 	return (0);
 }
