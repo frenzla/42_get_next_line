@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:53 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 15:04:33 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:37:33 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ char	*cpy_n_free(t_list **stock, size_t nb_chars)
 	line = malloc(sizeof(char) * (nb_chars + 1));
 	if (!line)
 		return (NULL);
+	i = 0;
 	while (i < nb_chars)
 	{
 		line[i] = (*stock)->c;

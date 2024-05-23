@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 14:59:11 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:34:58 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*get_next_line(int fd)
 	static t_list	*stock = NULL;
 
 	ret_read = BUFFER_SIZE;
-	if (find_nl_or_eof(&stock, ret_read))
+	if (find_nl_or_eof(&stock, ret_read) && ret_read != 0)
 	{
 		nb_chars = get_len(&stock);
 		return (cpy_n_free(&stock, nb_chars));
@@ -31,13 +31,16 @@ char	*get_next_line(int fd)
 		if (find_nl_or_eof(&stock, ret_read))
 			break ;
 	}
-	if (ret_read == 0 || !stock)
+	if (!stock)
 		return (NULL);
 	nb_chars = get_len(&stock);
 	return (cpy_n_free(&stock, nb_chars));
 }
 
-/*int	main(void)
+/*#include <stdio.h>
+#include <fcntl.h>
+
+int	main(void)
 {
 	int	fd;
 	char *line;
@@ -53,17 +56,12 @@ char	*get_next_line(int fd)
 
 	//call get_next_line in a loop
 	line = get_next_line(fd);
-	printf("LINE: %s\n", line);
-	printf("********************************\n");
 	while (line)
 	{
+		printf("LINE: %s", line);
+		printf("********************************\n");
 		free(line);
 		line = get_next_line(fd);
-		if (line)
-		{
-			printf("LINE: %s\n", line);
-			printf("********************************\n");
-		}
 	}
 
 	//free and close file

@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:59 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 15:05:00 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:37:27 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_list
 
 int		add_to_stock(char c, t_list **stock);
 size_t	read_n_stock(int fd, char *buff, t_list **stock);
-int		find_NL_or_EOF(t_list **stock, int ret_read);
+int		find_nl_or_eof(t_list **stock, int ret_read);
 size_t	get_len(t_list **stock);
 char	*cpy_n_free(t_list **stock, size_t nb_chars);
 char	*get_next_line(int fd);
