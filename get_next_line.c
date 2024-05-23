@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 14:37:12 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 14:49:38 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,31 @@
 
 char	*get_next_line(int fd)
 {
-	//create buffer
-	char 			buff[BUFFER_SIZE + 1];
+	char			buff[BUFFER_SIZE + 1];
 	size_t			ret_read;
 	size_t			nb_chars;
 	static t_list	*stock = NULL;
-	char			*line;
 
-	line = NULL;
 	ret_read = BUFFER_SIZE;
-	//printf("CURRENT STOCK: ");
 	print_lst(&stock);
-	//read & stock
-	if (find_NL_or_EOF(&stock, ret_read))
+	if (find_nl_or_eof(&stock, ret_read))
 	{
 		nb_chars = get_len(&stock);
-		//printf("Chars to copy: %zu\n", nb_chars);
-		//copy in line and free stock
-		line = cpy_n_free(&stock, nb_chars);
-		return (line);
+		return (cpy_n_free(&stock, nb_chars));
 	}
-	while(ret_read != 0)
+	while (ret_read != 0)
 	{
 		ret_read = read_n_stock(fd, buff, &stock);
-		//WORKING: printf("\nRET_READ = %zu\n\n", ret_read);
-		//check stock for newline OR EOF => break while if NL OR EOF
-		if (find_NL_or_EOF(&stock, ret_read))
-			break;
+		if (find_nl_or_eof(&stock, ret_read))
+			break ;
 	}
 	if (ret_read == 0 || !stock)
 		return (NULL);
-	//count nb_chars to write in line
 	nb_chars = get_len(&stock);
-	//printf("Chars to copy: %zu\n", nb_chars);
-	//copy in line and free stock
-	line = cpy_n_free(&stock, nb_chars);
-	return(line);
+	return (cpy_n_free(&stock, nb_chars));
 }
 
-int	main(void)
+/*int	main(void)
 {
 	int	fd;
 	char *line;
@@ -87,4 +73,4 @@ int	main(void)
 
 	//return
 	return (0);
-}
+}*/
