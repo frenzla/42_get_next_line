@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 12:18:10 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:43:13 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ int	main(void)
 	printf("********************************\n");
 	while (line)
 	{
+		free(line);
 		line = get_next_line(fd);
 		if (line)
 		{
@@ -228,6 +229,7 @@ int	main(void)
 	}
 
 	//free and close file
+	free(line);
 	close (fd);
 
 	//return
