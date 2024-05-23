@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 18:29:52 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/21 11:08:13 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,14 @@ char	*get_next_line(int fd)
 {
 	char			*buff;
 	size_t			ret_read;
-	size_t			nb_chars;
-	static t_list	*stock[4];
+	static t_list	*stock[1024];
 
+	buff = NULL;
+	if (fd < 0 || read(fd, buff, 0) < 0)
+		return (NULL);
 	ret_read = BUFFER_SIZE;
 	if (find_nl_or_eof(&stock[fd], ret_read) && ret_read != 0)
-	{
-		nb_chars = get_len(&stock[fd]);
-		return (cpy_n_free(&stock[fd], nb_chars));
-	}
+		return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
 		return (NULL);
@@ -37,11 +36,10 @@ char	*get_next_line(int fd)
 	free (buff);
 	if (!stock[fd])
 		return (NULL);
-	nb_chars = get_len(&stock[fd]);
-	return (cpy_n_free(&stock[fd], nb_chars));
+	return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
 }
 
-#include <stdio.h>
+/*#include <stdio.h>
 #include <fcntl.h>
 
 int	main(void)
@@ -131,4 +129,4 @@ int	main(void)
 
 	//return
 	return (0);
-}
+}*/
