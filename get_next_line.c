@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 12:09:21 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:18:10 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ char	*get_next_line(int fd)
 	char			*line;
 
 	line = NULL;
-	ret_read = -1;
+	ret_read = BUFFER_SIZE;
 	//printf("CURRENT STOCK: ");
 	print_lst(&stock);
 	//read & stock
