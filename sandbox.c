@@ -85,7 +85,7 @@ char *get_next_line(int fd)
 		int				i;
 		int				k;
 		static t_list	*stock;
-		static int		nb_chars = 0;
+		int				nb_chars = 0;
 		t_list			*current;
 
 	if (BUFFER_SIZE < 1)
@@ -115,7 +115,11 @@ char *get_next_line(int fd)
 			nb_chars= 0;
 			ret_read = read(fd, buff, BUFFER_SIZE);
 			if (ret_read == -1)
+			{
+				printf("File couldn't READ: ");
+				print_error();
 				return (NULL);
+			}
 			k = 0;
 			while (k < ret_read)
 			{
