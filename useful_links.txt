@@ -1,5 +1,0 @@
-Pass a macro to the preprocessor through command line : "-D name=definition"
-Example: -D BUFFER_SIZE=xx
-	1. https://www.rapidtables.com/code/linux/gcc/gcc-d.html
-	2. https://gcc.gnu.org/onlinedocs/gcc/Preprocessor-Options.html
-

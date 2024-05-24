@@ -6,11 +6,23 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/21 11:07:51 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/24 17:22:06 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	free_all(t_list **stock)
+{
+	t_list	*tmp;
+
+	while (*stock != NULL)
+	{
+		tmp = *stock;
+		*stock = (*stock)->next;
+		free(tmp);
+	}
+}
 
 char	*get_next_line(int fd)
 {
@@ -20,13 +32,13 @@ char	*get_next_line(int fd)
 
 	buff = NULL;
 	if (fd < 0 || read(fd, buff, 0) < 0)
-		return (NULL);
+		return (free_all(&stock), NULL);
 	ret_read = BUFFER_SIZE;
 	if (find_nl_or_eof(&stock, ret_read) && ret_read != 0)
 		return (cpy_n_free(&stock, get_len(&stock)));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
-		return (NULL);
+		return (free_all(&stock), NULL);
 	while (ret_read != 0)
 	{
 		ret_read = read_n_stock(fd, buff, &stock);
@@ -35,7 +47,7 @@ char	*get_next_line(int fd)
 	}
 	free (buff);
 	if (!stock)
-		return (NULL);
+		return (free_all(&stock), NULL);
 	return (cpy_n_free(&stock, get_len(&stock)));
 }
 

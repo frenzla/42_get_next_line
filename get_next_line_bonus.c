@@ -6,27 +6,39 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/21 11:08:13 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/24 17:15:32 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+
+void	free_all(t_list **stock)
+{
+	t_list	*tmp;
+
+	while (*stock != NULL)
+	{
+		tmp = *stock;
+		*stock = (*stock)->next;
+		free(tmp);
+	}
+}
 
 char	*get_next_line(int fd)
 {
 	char			*buff;
 	size_t			ret_read;
-	static t_list	*stock[1024];
+	static t_list	*stock[1025];
 
 	buff = NULL;
 	if (fd < 0 || read(fd, buff, 0) < 0)
-		return (NULL);
+		return (free_all(&stock[fd]), NULL);
 	ret_read = BUFFER_SIZE;
 	if (find_nl_or_eof(&stock[fd], ret_read) && ret_read != 0)
 		return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
-		return (NULL);
+		return (free_all(&stock[fd]), NULL);
 	while (ret_read != 0)
 	{
 		ret_read = read_n_stock(fd, buff, &stock[fd]);
