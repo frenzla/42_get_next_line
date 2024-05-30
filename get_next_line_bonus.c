@@ -6,139 +6,33 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/24 17:15:32 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 10:56:38 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-void	free_all(t_list **stock)
-{
-	t_list	*tmp;
-
-	while (*stock != NULL)
-	{
-		tmp = *stock;
-		*stock = (*stock)->next;
-		free(tmp);
-	}
-}
-
 char	*get_next_line(int fd)
 {
 	char			*buff;
-	size_t			ret_read;
+	int				ret_read;
 	static t_list	*stock[1025];
 
 	buff = NULL;
-	if (fd < 0 || read(fd, buff, 0) < 0)
+	if (fd < 0)
 		return (free_all(&stock[fd]), NULL);
 	ret_read = BUFFER_SIZE;
-	if (find_nl_or_eof(&stock[fd], ret_read) && ret_read != 0)
-		return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
 		return (free_all(&stock[fd]), NULL);
-	while (ret_read != 0)
+	while (ret_read != 0 && !(find_nl_or_eof(&stock[fd], ret_read)))
 	{
 		ret_read = read_n_stock(fd, buff, &stock[fd]);
-		if (find_nl_or_eof(&stock[fd], ret_read))
-			break ;
+		if (ret_read < 0)
+			return (free_all(&stock[fd]), free (buff), NULL);
 	}
 	free (buff);
-	if (!stock[fd])
-		return (NULL);
-	return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
+	if (find_nl_or_eof(&stock[fd], ret_read))
+		return (cpy_n_free(&stock[fd], get_len(&stock[fd])));
+	return (free_all(&stock[fd]), NULL);
 }
-
-/*#include <stdio.h>
-#include <fcntl.h>
-
-int	main(void)
-{
-	int	fd1;
-	int	fd2;
-	int	fd3;
-	char *line;
-	//Open file
-	fd1 = open("./myExample.txt", O_RDONLY);
-	fd2 = open("./myExample2.txt", O_RDONLY);
-	fd3 = open("./myExample3.txt", O_RDONLY);
-	if (fd1 < 1)
-	{
-		printf("Error while opening FD1\n");
-		return (-1);
-	}
-	else
-		printf("FD1 open\n\n" );
-
-	if (fd2 < 1)
-	{
-		printf("Error while opening FD2\n");
-		return (-1);
-	}
-	else
-		printf("FD2 open\n\n" );
-
-	if (fd1 < 1)
-	{
-		printf("Error while opening FD3\n");
-		return (-1);
-	}
-	else
-		printf("FD3 open\n\n" );
-
-	//call get_next_line in a loop
-	line = get_next_line(fd1);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd2);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd2);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd1);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd3);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd3);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd3);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd2);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	line = get_next_line(fd1);
-	printf("LINE: %s", line);
-	printf("********************************\n");
-	free(line);
-
-	//free and close file
-	close (fd1);
-	close (fd2);
-	close (fd3);
-
-	//return
-	return (0);
-}*/

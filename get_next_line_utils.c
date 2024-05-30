@@ -6,68 +6,37 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:53 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/20 16:46:31 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 10:59:22 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-//******************TEST FUNCTION******************
-/*void	print_lst(t_list **stock)
+int	read_n_stock(int fd, char *buff, t_list **stock)
 {
-	t_list	*tmp;
-
-	tmp = *stock;
-	if (!tmp)
-		printf("STOCK IS EMPTY\n");
-	else
-	{
-		//printf("IN STOCK: ");
-		while (tmp)
-		{
-			//printf("%c|", tmp->c);
-			tmp = tmp->next;
-		}
-		//printf("\n");
-	}
-}*/
-//******************TEST FUNCTION******************
-
-int	add_to_stock(char c, t_list **stock)
-{
+	int		ret_read;
+	int		i;
 	t_list	*new;
 	t_list	*tmp;
 
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (-1);
-	new->c = c;
-	new->next = NULL;
-	if (!(*stock))
-		*stock = new;
-	else
-	{
-		tmp = *stock;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-	return (0);
-}
-
-size_t	read_n_stock(int fd, char *buff, t_list **stock)
-{
-	size_t	ret_read;
-	size_t	i;
-
 	ret_read = read(fd, buff, BUFFER_SIZE);
-	if (ret_read < 1)
-		return (ret_read);
 	i = 0;
 	while (i < ret_read)
 	{
-		add_to_stock(buff[i], stock);
-		i++;
+		new = malloc(sizeof(t_list));
+		if (!new)
+			return (-1);
+		new->c = buff[i++];
+		new->next = NULL;
+		if (!(*stock))
+			*stock = new;
+		else
+		{
+			tmp = *stock;
+			while (tmp->next)
+				tmp = tmp->next;
+			tmp->next = new;
+		}
 	}
 	return (ret_read);
 }
@@ -123,4 +92,16 @@ char	*cpy_n_free(t_list **stock, size_t nb_chars)
 	}
 	line[i] = '\0';
 	return (line);
+}
+
+void	free_all(t_list **stock)
+{
+	t_list	*tmp;
+
+	while (*stock != NULL)
+	{
+		tmp = *stock;
+		*stock = (*stock)->next;
+		free(tmp);
+	}
 }

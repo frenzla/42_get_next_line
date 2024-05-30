@@ -6,49 +6,35 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/24 17:22:06 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 10:52:58 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	free_all(t_list **stock)
-{
-	t_list	*tmp;
-
-	while (*stock != NULL)
-	{
-		tmp = *stock;
-		*stock = (*stock)->next;
-		free(tmp);
-	}
-}
-
 char	*get_next_line(int fd)
 {
 	char			*buff;
-	size_t			ret_read;
+	int				ret_read;
 	static t_list	*stock = NULL;
 
 	buff = NULL;
-	if (fd < 0 || read(fd, buff, 0) < 0)
+	if (fd < 0)
 		return (free_all(&stock), NULL);
 	ret_read = BUFFER_SIZE;
-	if (find_nl_or_eof(&stock, ret_read) && ret_read != 0)
-		return (cpy_n_free(&stock, get_len(&stock)));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
 		return (free_all(&stock), NULL);
-	while (ret_read != 0)
+	while (ret_read != 0 && !(find_nl_or_eof(&stock, ret_read)))
 	{
 		ret_read = read_n_stock(fd, buff, &stock);
-		if (find_nl_or_eof(&stock, ret_read))
-			break ;
+		if (ret_read < 0)
+			return (free_all(&stock), free (buff), NULL);
 	}
 	free (buff);
-	if (!stock)
-		return (free_all(&stock), NULL);
-	return (cpy_n_free(&stock, get_len(&stock)));
+	if (find_nl_or_eof(&stock, ret_read))
+		return (cpy_n_free(&stock, get_len(&stock)));
+	return (free_all(&stock), NULL);
 }
 
 /*#include <stdio.h>
