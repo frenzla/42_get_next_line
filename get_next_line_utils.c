@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:53 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/30 10:59:22 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 17:44:59 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	find_nl_or_eof(t_list **stock, int ret_read)
 	tmp = *stock;
 	while (tmp)
 	{
-		if (ret_read < BUFFER_SIZE || tmp->c == '\n')
+		if (ret_read < (int)BUFFER_SIZE || tmp->c == '\n')
 			return (1);
 		tmp = tmp->next;
 	}

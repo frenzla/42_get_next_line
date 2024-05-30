@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 10:47:59 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/30 10:52:45 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 17:36:22 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stddef.h>
+# include <limits.h>
 
 typedef struct s_list
 {

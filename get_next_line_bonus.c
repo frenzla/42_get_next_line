@@ -6,7 +6,7 @@
 /*   By: alarose <alarose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 09:29:14 by alarose           #+#    #+#             */
-/*   Updated: 2024/05/30 15:04:12 by alarose          ###   ########.fr       */
+/*   Updated: 2024/05/30 17:47:25 by alarose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_next_line(int fd)
 	static t_list	*stock[1025];
 
 	buff = NULL;
-	if (fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || BUFFER_SIZE < 1 || BUFFER_SIZE > INT_MAX)
 		return (free_all(&stock[fd]), NULL);
 	ret_read = BUFFER_SIZE;
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
